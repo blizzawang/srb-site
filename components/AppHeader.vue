@@ -103,26 +103,40 @@
   </header>
 </template>
 <script>
-import '~/assets/font/iconfont.css'
-import cookie from 'js-cookie'
+import '~/assets/font/iconfont.css';
+import cookie from 'js-cookie';
 
 export default {
   data() {
     return {
       userInfo: null,
-    }
+    };
   },
 
   mounted() {
-    this.showInfo()
+    this.showInfo();
   },
 
   methods: {
     //显示用户信息
-    showInfo() {},
+    showInfo() {
+      // 判断当前Cookie中是否包含用户信息
+      let userInfo = cookie.get('userInfo');
+      if (!userInfo) {
+        this.userInfo = null;
+        return;
+      }
+      userInfo = JSON.parse(userInfo);
+      this.userInfo = userInfo;
+    },
 
     //退出
-    logout() {},
+    logout() {
+      // 清空Cookie中的token
+      cookie.set('userInfo', '');
+      // 退出登录后跳转至登录页
+      window.location.href = '/login';
+    },
   },
-}
+};
 </script>

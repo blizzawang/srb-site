@@ -39,7 +39,8 @@ module.exports = {
 
   axios: {
     // Axios options here
-    baseURL: 'http://localhost',
+    // 配置到后台nginx服务器
+    baseURL: 'http://localhost:8000',
   },
 
   plugins: [
@@ -49,4 +50,4 @@ module.exports = {
   ],
 
   // ssr: false, //设置为false表示客户端渲染，true为服务器端渲染，默认为true
-}
+};

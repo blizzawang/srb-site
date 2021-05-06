@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import '~/assets/css/register.css'
+import '~/assets/css/register.css';
 export default {
   data() {
     return {
@@ -90,18 +90,58 @@ export default {
       sending: false, // 是否发送验证码
       second: 10, // 倒计时间
       leftSecond: 0, //剩余时间
-    }
+    };
   },
 
   methods: {
     //发短信
-    send() {},
+    send() {
+      if (!this.userInfo.mobile) {
+        this.$message.error('请输入手机号码');
+        return;
+      }
+
+      // 点击获取验证码后，禁用按钮，防止重复提交
+      if (this.sending) {
+        return;
+      }
+      this.sending = true;
+
+      // 执行倒计时
+      this.timeDown();
+
+      this.$axios
+        .$get('/api/sms/send/' + this.userInfo.mobile)
+        .then((response) => {
+          this.$message.success(response.message);
+        });
+    },
 
     //倒计时
-    timeDown() {},
+    timeDown() {
+      console.log('倒计时开始');
+      this.leftSecond = this.second;
+
+      // 启动计时器
+      const timer = setInterval(() => {
+        this.leftSecond--;
+        if (this.leftSecond <= 0) {
+          // 停止计时器
+          clearInterval(timer);
+          // 重新激活按钮
+          this.sending = false;
+        }
+      }, 1000);
+    },
 
     //注册
-    register() {},
+    register() {
+      this.$axios
+        .$post('/api/core/userInfo/register', this.userInfo)
+        .then((response) => {
+          this.step = 2;
+        });
+    },
   },
-}
+};
 </script>
