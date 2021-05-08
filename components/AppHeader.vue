@@ -127,7 +127,17 @@ export default {
         return;
       }
       userInfo = JSON.parse(userInfo);
-      this.userInfo = userInfo;
+      // 校验token是否合法
+      this.$axios({
+        url: '/api/core/userInfo/checkToken',
+        method: 'get',
+        headers: {
+          token: userInfo.token,
+        },
+      }).then((response) => {
+        console.log('校验成功');
+        this.userInfo = userInfo;
+      });
     },
 
     //退出
