@@ -34,12 +34,13 @@ module.exports = {
   ],
 
   env: {
-    BASE_API: 'http://localhost',
+    // 网关端口为8000
+    BASE_API: 'http://localhost:8000',
   },
 
   axios: {
     // Axios options here
-    // 配置到后台nginx服务器
+    // 网关端口为8000
     baseURL: 'http://localhost:8000',
   },
 
