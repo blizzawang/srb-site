@@ -121,7 +121,7 @@
 export default {
   data() {
     return {
-      active: 0, //步骤
+      active: null, //步骤
       borrowInfoStatus: null, //审批状态
       //借款申请
       borrowInfo: {
@@ -148,12 +148,33 @@ export default {
     active() {},
   },
   mounted() {
-    // 获取借款额度
-    this.getBorrowAmount();
-    // 初始化下拉列表
-    this.initSelected();
+    this.getBorrowInfoStatus();
   },
   methods: {
+    getBorrowInfoStatus() {
+      this.$axios
+        .$get('/api/core/borrowInfo/auth/getBorrowInfoStatus')
+        .then((response) => {
+          this.borrowInfoStatus = response.data.borrowInfoStatus;
+          if (this.borrowInfoStatus === 0) {
+            // 未认证
+            this.active = 0;
+            // 获取借款额度
+            this.getBorrowAmount();
+            // 初始化下拉列表
+            this.initSelected();
+          } else if (this.borrowInfoStatus === 1) {
+            // 审批中
+            this.active = 1;
+          } else if (this.borrowInfoStatus === 2) {
+            // 审批成功
+            this.active = 2;
+          } else if (this.borrowInfoStatus === -1) {
+            // 审批失败
+            this.active = 2;
+          }
+        });
+    },
     // 初始化下拉列表数据
     initSelected() {
       // 还款方式列表
